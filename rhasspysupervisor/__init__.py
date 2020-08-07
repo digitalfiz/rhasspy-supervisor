@@ -2280,6 +2280,56 @@ def get_text_to_speech(
 
         return tts_command
 
+    if tts_system == "polly":
+
+        voice = str(profile.get("text_to_speech.polly.voice", "Joanna")).strip()
+        engine = str(profile.get("text_to_speech.polly.engine", "neural")).strip()
+        sample_rate = str(profile.get("text_to_speech.polly.sample_rate", 22050))
+        region = str(profile.get("text_to_speech.region.engine", "us-east-1")).strip()
+        language_code = str(
+            profile.get("text_to_speech.polly.language_code", "en-US")
+        ).strip()
+
+        credentials = profile.get("text_to_speech.polly.credentials")
+        if not credentials:
+            _LOGGER.error("text_to_speech.polly.credentials required")
+            return []
+
+        cache_dir = profile.get("text_to_speech.polly.cache_dir")
+        if not cache_dir:
+            _LOGGER.error("text_to_speech.polly.cache_dir is required")
+            return []
+
+        tts_command = [
+            "rhasspy-tts-polly-hermes",
+            "--credentials",
+            shlex.quote(str(write_path(profile, credentials))),
+            "--cache-dir",
+            shlex.quote(str(write_path(profile, cache_dir))),
+            "--voice",
+            shlex.quote(voice),
+            "--engine",
+            shlex.quote(engine),
+            "--sample-rate",
+            shlex.quote(sample_rate),
+            "--language-code",
+            shlex.quote(language_code),
+            "--region",
+            shlex.quote(region),
+        ]
+
+        add_standard_args(
+            profile,
+            tts_command,
+            site_ids,
+            mqtt_host,
+            mqtt_port,
+            mqtt_username,
+            mqtt_password,
+        )
+
+        return tts_command
+
     if tts_system == "opentts":
         url = profile.get("text_to_speech.opentts.url", "").strip()
         if not url:
