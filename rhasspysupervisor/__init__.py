@@ -2284,7 +2284,7 @@ def get_text_to_speech(
 
         voice = str(profile.get("text_to_speech.polly.voice", "Joanna")).strip()
         engine = str(profile.get("text_to_speech.polly.engine", "neural")).strip()
-        sample_rate = str(profile.get("text_to_speech.polly.sample_rate", 22050))
+        sample_rate = str(profile.get("text_to_speech.polly.sample_rate", "22050"))
         region = str(profile.get("text_to_speech.region.engine", "us-east-1")).strip()
         language_code = str(
             profile.get("text_to_speech.polly.language_code", "en-US")
